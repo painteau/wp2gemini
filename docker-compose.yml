@@ -1,0 +1,19 @@
+services:
+  wp2gemini:
+    image: ghcr.io/painteau/wp2gemini
+    container_name: wp2gemini
+    labels:
+      com.centurylinklabs.watchtower.enable: "true"
+    environment:
+      DB_HOST: "localhost"
+      DB_USER: "wordpress-user"
+      DB_PORT: "3306"
+      DB_PASS: "my-password"
+      DB_NAME: "wordpress"
+      SITE_URL: "gemini://my.url.com"
+      BLOG_TITLE: "My gemlog title"
+      AUTHOR_NAME: "My name"
+      BLOG_INTRO: "Welcome to my gemblog !"
+    volumes:
+      - /my/gemlog/final/files/:/gemlog
+    restart: unless-stopped
