@@ -53,8 +53,8 @@ tail -n +2 "$OUTPUT_DIR/posts.csv" | while IFS=$'\t' read -r id title content da
     filename=$(clean_filename "$title").gmi  # Clean the filename from the title
 
     # Extract URLs
-    # URLS=$(echo "$clean_content" | grep -oE 'https://[^"]+')
     URLS=$(echo -e "$content" | grep -oE '<a[^>]+href="https://[^"]+"' | sed -E 's/.*href="(https:\/\/[^"]+)".*/\1/')
+    URL_REFERENCES=()
 
     # Convert content
     clean_content=$(echo -e "$content" | sed -E 's|<h1[^>]*>(.*?)<\/h1>|# \1|g')
@@ -66,12 +66,11 @@ tail -n +2 "$OUTPUT_DIR/posts.csv" | while IFS=$'\t' read -r id title content da
     clean_content=$(echo -e "$clean_content" | sed -E 's|<li[^>]*>(.*?)<\/li>|* \1|g')
     clean_content=$(echo -e "$clean_content" | sed -E 's|<ol[^>]*>(.*?)<\/ol>|(\1)|g')
     clean_content=$(echo -e "$clean_content" | sed -E 's|<blockquote[^>]*>(.*?)<\/blockquote>|> \1|g')
-    # clean_content=$(echo -e "$clean_content" | sed -E 's|<pre[^>]*>(.*?)<\/pre>|```\n\1\n```|g')
-    # clean_content=$(echo -e "$clean_content" | sed -E 's|<code[^>]*>(.*?)<\/code>|`\n\1\n`|g')
+    #clean_content=$(echo -e "$clean_content" | sed -E 's|<pre[^>]*>(.*?)<\/pre>|```\n\1\n```|g')
+    #clean_content=$(echo -e "$clean_content" | sed -E 's|<code[^>]*>(.*?)<\/code>|`\n\1\n`|g')
     clean_content=$(echo -e "$clean_content" | sed -E 's|<hr\s*\/?>|---|g')
 
     # Extract images
-    # clean_content=$(echo -e "$clean_content" | sed -E 's|<img src="https?://[^/]+/.*/([^/"]+\.[^/"]+)"[^>]*>|=> images/\1  \1|g')
     clean_content=$(echo -e "$clean_content" | sed -E 's|<img[^>]*src="https?://[^/]+/.*/([^/"]+\.[^/"]+)"[^>]*/>|=> images/\1  \1|g')
 
     # Clean the HTML tags left
@@ -86,9 +85,7 @@ tail -n +2 "$OUTPUT_DIR/posts.csv" | while IFS=$'\t' read -r id title content da
     clean_content=$(echo -e "$clean_content" | sed 's/&amp;/&/g')
     clean_content=$(echo -e "$clean_content" | sed 's/&quot;/"/g')
     clean_content=$(echo -e "$clean_content" | sed 's/&apos;/'"'"'/g')
-    
-
-
+  
     # Extract the thumbnail URL from the wp_postmeta table
     IMAGE_QUERY="SELECT meta_value FROM wp_postmeta WHERE post_id=$id AND meta_key='_thumbnail_id';"
     THUMBNAIL_ID=$(mysql -h "$DB_HOST" -P "$DB_PORT" -u"$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "$IMAGE_QUERY" | tail -n +2)
@@ -134,12 +131,10 @@ tail -n +2 "$OUTPUT_DIR/posts.csv" | while IFS=$'\t' read -r id title content da
         fi
     done
 
-    # Add the cleaned content
+    # Add the cleaned content to file
     echo -e "$clean_content" >> "$OUTPUT_DIR/$filename"  # Add the cleaned content
 
-    # Add references at the end
-    URL_REFERENCES=()
-
+    # Add references at the end of the file
     # Loop through each extracted URL
     for URL in $URLS; do
         echo "Processing URL: $URL"
@@ -147,13 +142,13 @@ tail -n +2 "$OUTPUT_DIR/posts.csv" | while IFS=$'\t' read -r id title content da
     done
 
     # Append the URL references to the end of the .gmi file
-    echo "" >> "$OUTPUT_DIR/$filename"  # Ensure there's a new line before the link
+    echo "" >> "$OUTPUT_DIR/$filename"  # Ensure there's a new line before the title
     echo "# Links " >> "$OUTPUT_DIR/$filename"  
     for REFERENCE in "${URL_REFERENCES[@]}"; do
         echo "$REFERENCE" >> "$OUTPUT_DIR/$filename"
     done
 
-    # Add the entry to the index
+    # Finally, add the entry to the index
     echo "=> ./$filename $(date -d "$date" +%Y-%m-%d) - $title" >> "$INDEX_FILE"
 
     # Add the entry to the Atom file
@@ -170,7 +165,7 @@ tail -n +2 "$OUTPUT_DIR/posts.csv" | while IFS=$'\t' read -r id title content da
 
     # Add a link to the index at the end of the article
     echo "" >> "$OUTPUT_DIR/$filename"  # Ensure there's a new line before the link
-    echo "=> ./index.gmi Back to home" >> "$OUTPUT_DIR/$filename"
+    echo "=> ./index.gmi Back to Home" >> "$OUTPUT_DIR/$filename"
 
 done
 
@@ -179,8 +174,8 @@ echo '</feed>' >> "$ATOM_FILE"
 
 # Adding the Gemfeed to the index
 echo "" >> "$INDEX_FILE"
-echo "Thanks !" >> "$INDEX_FILE"
-echo "=> ./atom.xml Atom feed" >> "$INDEX_FILE"
+echo "This is the end...." >> "$INDEX_FILE"
+echo "=> ./atom.xml Atom.xml feed" >> "$INDEX_FILE"
 echo "" >> "$INDEX_FILE"
 
 # Delete the posts.csv file after processing
