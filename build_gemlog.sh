@@ -147,6 +147,8 @@ tail -n +2 "$OUTPUT_DIR/posts.csv" | while IFS=$'\t' read -r id title content da
     done
 
     # Append the URL references to the end of the .gmi file
+    echo "" >> "$OUTPUT_DIR/$filename"  # Ensure there's a new line before the link
+    echo "# Links " >> "$OUTPUT_DIR/$filename"  
     for REFERENCE in "${URL_REFERENCES[@]}"; do
         echo "$REFERENCE" >> "$OUTPUT_DIR/$filename"
     done
