@@ -54,7 +54,7 @@ tail -n +2 "$OUTPUT_DIR/posts.csv" | while IFS=$'\t' read -r id title content da
 
     # Extract URLs
     # URLS=$(echo "$clean_content" | grep -oE 'https://[^"]+')
-    URLS=$(echo "$content" | grep -oE '<a[^>]+href="https://[^"]+"' | sed -E 's/.*href="(https:\/\/[^"]+)".*/\1/')
+    URLS=$(echo -e "$content" | grep -oE '<a[^>]+href="https://[^"]+"' | sed -E 's/.*href="(https:\/\/[^"]+)".*/\1/')
 
     # Convert content
     clean_content=$(echo -e "$content" | sed -E 's|<h1[^>]*>(.*?)<\/h1>|# \1|g')
