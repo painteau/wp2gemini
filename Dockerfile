@@ -2,7 +2,7 @@
 FROM debian:bullseye-slim
 
 # Install the MySQL client and other necessary tools
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install --no-install-recommends -y \
     default-mysql-client \
     curl \
     bash \
@@ -18,5 +18,5 @@ COPY build_gemlog.sh /app/
 # Make the script executable
 RUN chmod +x /app/build_gemlog.sh
 
-# Entry point for executing the script
-ENTRYPOINT ["/app/build_gemlog.sh"]
+# Default command for executing the script
+CMD ["/app/build_gemlog.sh"]
