@@ -1,48 +1,40 @@
-# **WP2Gemini**
+# 🌍 WP2Gemini
 
-WP2Gemini is a **Dockerized tool** that extracts recent posts from a WordPress MySQL database, converts them to **Gemtext**, and generates an **Atom feed**. It enables you to effortlessly maintain a Gemini-compatible blog using your WordPress content.
-
-## **🔗 Repository & Container**
-
-- **GitHub**: [https://github.com/painteau/wp2gemini](https://github.com/painteau/wp2gemini)
-- **Container Registry**: [ghcr.io/painteau/wp2gemini](https://ghcr.io/painteau/wp2gemini)
+WP2Gemini is a **Dockerized tool** that extracts recent posts from a **WordPress MySQL database**, converts them to **Gemtext**, and generates an **Atom feed**. It enables you to effortlessly maintain a Gemini-compatible blog using your WordPress content.
 
 ---
 
-## **✨ Features**
-
-- ✅ **Automated extraction** of published WordPress posts
-- ✅ **HTML to Gemtext** conversion, including headers, lists, links, and images
-- ✅ **Automatic Atom feed generation** (`atom.xml`)
-- ✅ **Thumbnail & image downloads** for enhanced content display
-- ✅ **Customizable environment variables** for fine-tuned control
-- ✅ **Works with Docker & Docker Compose** for easy deployment
-
----
-
-## **📌 Prerequisites**
-
-- **[Docker](https://www.docker.com/get-started)** installed on your system
-- Access to a **WordPress MySQL database**
-- A **Gemini server** such as Agate for hosting your Gemlog
+## ⭐ Features
+- ✅ **Automated extraction** of published WordPress posts.
+- ✅ **HTML to Gemtext conversion**, including headers, lists, links, and images.
+- ✅ **Automatic Atom feed generation** (`atom.xml`).
+- ✅ **Thumbnail & image downloads** for enhanced content display.
+- ✅ **Customizable environment variables** for fine-tuned control.
+- ✅ **Works with Docker & Docker Compose** for easy deployment.
 
 ---
 
-## **🚀 Getting Started**
+## 📌 Prerequisites
+- **Docker** installed on your system.
+- Access to a **WordPress MySQL database**.
+- A **Gemini server** such as Agate for hosting your Gemlog.
 
-### **Step 1: Pull the Docker Image**
+---
 
-Pull the latest version of the image from the GitHub Container Registry:
+## 🛠 Setup & Installation
 
+### **1️⃣ Clone the Repository**
+```bash
+git clone https://github.com/painteau/wp2gemini.git
+cd wp2gemini
+```
+
+### **2️⃣ Pull the Docker Image**
 ```bash
 docker pull ghcr.io/painteau/wp2gemini:latest
 ```
 
----
-
-## **Running WP2Gemini**
-
-### **Option 1: Using Docker Compose**
+### **3️⃣ Using Docker Compose**
 
 Use the provided `docker-compose.yml` to simplify deployment.
 
@@ -74,34 +66,21 @@ Run the container:
 docker-compose up -d
 ```
 
-### **Option 2: Using `docker run`**
+---
 
-Alternatively, you can run WP2Gemini manually with:
+## 🐳 Running with Docker (GHCR)
 
-```bash
-docker run -d \
-    --name wp2gemini \
-    --restart always \
-    -e DB_HOST="your-db-host" \
-    -e DB_PORT="3306" \
-    -e DB_USER="your-db-username" \
-    -e DB_PASS="your-db-password" \
-    -e DB_NAME="your-db-name" \
-    -e SITE_URL="gemini://your-site.org" \
-    -e BLOG_TITLE="Your gemlog title" \
-    -e BLOG_INTRO="Welcome to my gemlog!" \
-    -e AUTHOR_NAME="Your Name" \
-    -v /path/to/output:/gemlog \
-    ghcr.io/painteau/wp2gemini
-```
+WP2Gemini is available on **GitHub Container Registry (GHCR)**.
+
+📦 **[`ghcr.io/painteau/wp2gemini`](https://ghcr.io/painteau/wp2gemini)**
 
 ---
 
-## **Deploying a Gemini Server with Agate**
+## 🌐 Deploying a Gemini Server with Agate
 
 To serve your generated Gemtext files, you can use [Agate](https://github.com/mbrubeck/agate), a lightweight Gemini server.
 
-### **Running Agate with Docker**
+### 🐧 Running Agate with Docker
 
 ```bash
 docker run --name=agate \
@@ -114,10 +93,9 @@ docker run --name=agate \
     /usr/local/cargo/bin/agate 0.0.0.0:1965 /var/agate/content /var/agate/keys/cert.pem /var/agate/keys/key.rsa
 ```
 
-### **Generating SSL Certificates for Agate**
+### 🔑 Generating SSL Certificates for Agate
 
 This will generate `cert.pem` and `key.rsa` inside `/path/to/keys`, which Agate will use for encryption. These files should not be publicly accessible for security reasons. Avoid placing them in a subdirectory of `/path/to/output` to prevent accidental exposure.
-
 
 Generate a self-signed certificate:
 
@@ -144,9 +122,7 @@ Add the following line:
 
 ---
 
-## **⚙️ Customization**
-
-You can configure WP2Gemini with the following **environment variables**:
+## ⚙ Configuration
 
 | Variable      | Default Value            | Description                  |
 | ------------- | ------------------------ | ---------------------------- |
@@ -162,29 +138,30 @@ You can configure WP2Gemini with the following **environment variables**:
 
 ---
 
-## **🐞 Troubleshooting**
+## 📜 License
 
-### **1. My posts are missing or not updated**
-
-Check if the database is reachable:
-
-```bash
-mysql -h "$DB_HOST" -P "$DB_PORT" -u"$DB_USER" -p"$DB_PASS" -e "USE $DB_NAME;"
-```
-
-Ensure that posts have `post_status='publish'` in `wp_posts`.
-
-### **2. The script is wiping my output folder!**
-
-⚠️ **This is intentional**! `/path/to/output` is cleared before each execution.
+This project is licensed under the **MIT License**.
 
 ---
 
-## **📜 License**
+## ⚠ Security Notice
 
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more details.
+Ensure that you expose the API securely and restrict access if necessary when deploying in a production environment.
 
-## **📣 Contributing**
+---
 
-Contributions are welcome! Feel free to **open an issue** or **submit a pull request** on [GitHub](https://github.com/painteau/wp2gemini).
+## 💡 Contributing
+
+1️⃣ **Fork** the repository on [GitHub](https://github.com/painteau/wp2gemini)  
+2️⃣ **Create a new branch** (`feature-branch`)  
+3️⃣ **Commit your changes**  
+4️⃣ **Push to your branch and create a pull request**  
+
+For major changes, please open an **issue** first to discuss the proposed modifications.
+
+---
+
+## 📬 Contact
+
+For issues or improvements, open an issue on GitHub or contact **Painteau**.
 
