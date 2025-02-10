@@ -146,7 +146,7 @@ This project is licensed under the **MIT License**.
 
 ## ⚠ Security Notice
 
-Ensure that you expose the API securely and restrict access if necessary when deploying in a production environment.
+Ensure that you expose the dockers securely and restrict access if necessary when deploying in a production environment.
 
 ---
 
